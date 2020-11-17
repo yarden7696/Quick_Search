@@ -12,45 +12,65 @@ using namespace std;
 /////////////////////////////////////////////////////////
 shared_ptr<QueryBase> QueryBase::factory(const string& s) { // s is the search string 
 
+
+
 int i=0,j=0;
 std::string before,left,right,oWord;
 
 std::istringstream iss(s);
 std::string w,sNew;
    while (iss>>w) {
-       j++;
-        sNew=sNew+ " " +w;
+        j++;
+        sNew=sNew+w;
+        sNew+=" ";
    } 
 
 //for(int i=0; i<sNew.size(); i++) {
 
 
-if (sNew.substr(i,i+1)=="OR") { 
-    before="OR";
-    int position= sNew.find(" ",i+2);
-    left=sNew.substr(i+2,position-1);
-    right=sNew.substr(position+1,sNew.size()-1);
+if (sNew.at(0)=='O' && sNew.at(1)=='R' && j==3) { 
+    //before="OR"; 
+    int position= sNew.find(" ",i+3);
+    left=sNew.substr(3,position-3);
+
+    int l=position+2;
+    l=sNew.size()-l;
+
+    right=sNew.substr(position+1,l);
         return std::shared_ptr<QueryBase>(new OrQuery(left,right));
 }
 
-else if(sNew.substr(i,i+1)=="AD") {
-    before="AD";
-    int position= sNew.find(" ",i+2);
-    left=sNew.substr(i+2,position-1);
-    right=sNew.substr(position+1,sNew.size()-1);
+else if(sNew.at(0)=='A' && sNew.at(1)=='d' && j==3) {
+    //before="AD";
+    int position= sNew.find(" ",i+3);
+    left=sNew.substr(3,position-3);
+
+    int l=position+2;
+    l=sNew.size()-l;
+
+    right=sNew.substr(position+1,l);
         return std::shared_ptr<QueryBase>(new AdjacentQuery(left,right));
 }  
 
-else if(sNew.substr(i,i+2)=="AND") { 
+else if(sNew.at(0)=='A' && sNew.at(1)=='N' && sNew.at(2)=='D'&& j==3) { 
     //before="AND";
-    int position= sNew.find(" ",i+2);
-    left=sNew.substr(i+2,position-1);
-    right=sNew.substr(position+1,sNew.size()-1);
+    int position= sNew.find(" ",i+4);
+    left=sNew.substr(4,position-4);
+
+    int l=position+2;
+    l=sNew.size()-l;
+
+    right=sNew.substr(position+1,l);
         return std::shared_ptr<QueryBase>(new AndQuery(left,right));
 }
 
-//else one word without or /and/ ad
-//else - error "Unrecognized search" check when to write this...
+else if(j==1) {
+    int size=sNew.size()-1;
+    sNew=sNew.substr(0,size);
+ return std::shared_ptr<QueryBase>(new WordQuery(sNew));
+}
+
+else cout << "Unrecognized search" << endl;
   
 
 
