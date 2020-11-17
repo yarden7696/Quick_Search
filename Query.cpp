@@ -12,7 +12,6 @@ using namespace std;
 
 shared_ptr<QueryBase> QueryBase::factory(const string& s) { // s is the search string 
 
-
 int i=0,j=0;
 std::string left,right;
 
@@ -23,7 +22,6 @@ std::string w,sNew;
         sNew=sNew+w;
         sNew+=" ";
    } 
-
 
 if (sNew.at(0)=='O' && sNew.at(1)=='R' && j==3) { 
     int position= sNew.find(" ",i+3);
