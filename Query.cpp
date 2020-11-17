@@ -9,13 +9,12 @@
 #include <stdexcept>
 #include <regex>
 using namespace std;
-/////////////////////////////////////////////////////////
+
 shared_ptr<QueryBase> QueryBase::factory(const string& s) { // s is the search string 
 
 
-
 int i=0,j=0;
-std::string before,left,right,oWord;
+std::string left,right;
 
 std::istringstream iss(s);
 std::string w,sNew;
@@ -25,45 +24,31 @@ std::string w,sNew;
         sNew+=" ";
    } 
 
-//for(int i=0; i<sNew.size(); i++) {
-
 
 if (sNew.at(0)=='O' && sNew.at(1)=='R' && j==3) { 
-    //before="OR"; 
     int position= sNew.find(" ",i+3);
     left=sNew.substr(3,position-3);
-
     int l=position+2;
     l=sNew.size()-l;
-
     right=sNew.substr(position+1,l);
         return std::shared_ptr<QueryBase>(new OrQuery(left,right));
 }
-
-else if(sNew.at(0)=='A' && sNew.at(1)=='d' && j==3) {
-    //before="AD";
+else if(sNew.at(0)=='A' && sNew.at(1)=='D' && j==3) {
     int position= sNew.find(" ",i+3);
     left=sNew.substr(3,position-3);
-
     int l=position+2;
     l=sNew.size()-l;
-
     right=sNew.substr(position+1,l);
         return std::shared_ptr<QueryBase>(new AdjacentQuery(left,right));
 }  
-
 else if(sNew.at(0)=='A' && sNew.at(1)=='N' && sNew.at(2)=='D'&& j==3) { 
-    //before="AND";
     int position= sNew.find(" ",i+4);
     left=sNew.substr(4,position-4);
-
     int l=position+2;
     l=sNew.size()-l;
-
     right=sNew.substr(position+1,l);
         return std::shared_ptr<QueryBase>(new AndQuery(left,right));
 }
-
 else if(j==1) {
     int size=sNew.size()-1;
     sNew=sNew.substr(0,size);
@@ -72,9 +57,6 @@ else if(j==1) {
 
 else 
   throw invalid_argument("Unrecognized search"); 
-
-
-
 }
 
 
