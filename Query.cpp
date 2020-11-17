@@ -70,9 +70,8 @@ else if(j==1) {
  return std::shared_ptr<QueryBase>(new WordQuery(sNew));
 }
 
-else cout << "Unrecognized search" << endl;
-  
-
+else 
+  throw invalid_argument("Unrecognized search"); 
 
 
 
