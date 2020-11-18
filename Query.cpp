@@ -8,7 +8,9 @@
 #include <iterator>
 #include <stdexcept>
 #include <regex>
+#include <cmath>
 using namespace std;
+
 
 shared_ptr<QueryBase> QueryBase::factory(const string& s) { // s is the search string 
 
@@ -52,18 +54,12 @@ else if(j==1) {
     sNew=sNew.substr(0,size);
  return std::shared_ptr<QueryBase>(new WordQuery(sNew));
 }
-
 else 
-  throw invalid_argument("Unrecognized search"); 
+  throw invalid_argument("Unrecognized search\n"); 
 }
 
 
-
-// . . .
-/////////////////////////////////////////////////////////
-
-QueryResult AndQuery::eval (const TextQuery& text) const
-{
+QueryResult AndQuery::eval (const TextQuery& text) const {
     QueryResult left_result = text.query(left_query);
     QueryResult right_result = text.query(right_query);
     auto ret_lines = make_shared<set<line_no>>();
@@ -73,30 +69,56 @@ QueryResult AndQuery::eval (const TextQuery& text) const
    return QueryResult(rep(), ret_lines, left_result.get_file());
 }
 
-QueryResult OrQuery::eval(const TextQuery &text) const
-{
+QueryResult OrQuery::eval(const TextQuery &text) const {
     QueryResult left_result = text.query(left_query);
     QueryResult right_result = text.query(right_query);
     auto ret_lines = make_shared<set<line_no>>(left_result.begin(), left_result.end());
     ret_lines->insert(right_result.begin(), right_result.end());
     return QueryResult(rep(), ret_lines, left_result.get_file());
 }
-/////////////////////////////////////////////////////////
-QueryResult AdjacentQuery::eval (const TextQuery& text) const
-{
-// . . .
+
+
+QueryResult AdjacentQuery::eval (const TextQuery& text) const {
+    QueryResult left_result = text.query(left_query);
+    QueryResult right_result = text.query(right_query);
+    auto ret_lines = make_shared<set<line_no>>();
+
+    for(auto itL=left_result.begin(); itL!=left_result.end(); itL++) {
+         for(auto itR=right_result.begin() ;itR!=right_result.end() ;itR++) {
+
+        if((*itL-*itR==1)|| (*itR-*itL==1)) {
+         ret_lines->insert(*itL);
+         ret_lines->insert(*itR);
+       
+        }
+     }
 }
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-std::ostream &print(std::ostream &os, const QueryResult &qr)
-{
-    os << "\"" << qr.sought << "\"" << " occurs " << 
-        qr.lines->size() << " times:" <<std::endl;
-    for (auto num : *qr.lines)
-    {
-        os << "\t(line " << num + 1 << ") " 
-            << *(qr.file->begin() + num) << std::endl;
+    return QueryResult(rep(), ret_lines, left_result.get_file());
+}
+
+
+std::ostream &print(std::ostream &os, const QueryResult &qr) {
+ 
+    if(qr.sought.substr(0,2)=="AD") {
+
+        int i=0;
+        os << "\"" << qr.sought << "\"" << " occurs " << 
+            qr.lines->size()/2 << " times:" <<std::endl;
+
+            for (auto num : *qr.lines) {
+                if(i%2==0 && i!=0 && i!=qr.lines->size()/2) os << "\n" << endl;
+            os << "\t(line " << num + 1 << ") " 
+                << *(qr.file->begin() + num) << std::endl;
+                i++;
+        } 
+            return os;
     }
-    return os;
-}
-/////////////////////////////////////////////////////////
+else 
+        os << "\"" << qr.sought << "\"" << " occurs " << 
+                qr.lines->size() << " times:" <<std::endl;
+            for (auto num : *qr.lines) {
+                os << "\t(line " << num + 1 << ") " 
+                    << *(qr.file->begin() + num) << std::endl;
+            }
+            return os;
+        }
