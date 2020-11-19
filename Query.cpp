@@ -83,10 +83,9 @@ QueryResult AdjacentQuery::eval (const TextQuery& text) const {
 
     for(auto itL=left_result.begin(); itL!=left_result.end(); itL++) {
          for(auto itR=right_result.begin() ;itR!=right_result.end() ;itR++) {
-
-        if((*itL-*itR==1)|| (*itR-*itL==1)) {
-             ret_lines->insert(*itL);
-                 ret_lines->insert(*itR);
+            if((*itL-*itR==1)|| (*itR-*itL==1)) {
+                 ret_lines->insert(*itL);
+                    ret_lines->insert(*itR);
        
         }
      }
@@ -99,14 +98,13 @@ std::ostream &print(std::ostream &os, const QueryResult &qr) {
 int i=0, n2;
         os << "\"" << qr.sought << "\"" << " occurs " << 
             (qr.lines->size()+1)/2 << " times:" <<std::endl;
-
+   
             for (auto num : *qr.lines) {
                 if(qr.sought.substr(0,2)=="AD" && i!=0 && i%2==0)
                         os<<std::endl;
-
-                if(qr.sought.substr(0,2)=="AD" && (i+1)%2==1 && n2+1==num) { 
+                if(qr.sought.substr(0,2)=="AD" && (i+1)%2==1 && n2+1==num)  
                     os << "\t(line " << num << ") " << *(qr.file->begin()+ num-1) << std::endl;
-                } 
+               
                 os << "\t(line " << num + 1 << ") " <<
                     *(qr.file->begin() + num) << std::endl;
             i++;
