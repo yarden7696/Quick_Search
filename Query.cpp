@@ -52,8 +52,7 @@ else if(j==1) {
     sNew=sNew.substr(0,size);
  return std::shared_ptr<QueryBase>(new WordQuery(sNew));
 }
-else 
-  throw invalid_argument("Unrecognized search\n"); 
+else throw invalid_argument("Unrecognized search\n"); 
 }
 
 
