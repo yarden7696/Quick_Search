@@ -11,7 +11,6 @@
 #include <cmath>
 using namespace std;
 
-
 shared_ptr<QueryBase> QueryBase::factory(const string& s) { // s is the search string 
 
 int i=0,j=0;
@@ -24,7 +23,6 @@ std::string w,sNew;
         sNew=sNew+w;
         sNew+=" ";
    } 
-
 if (sNew.at(0)=='O' && sNew.at(1)=='R' && j==3) { 
     int position= sNew.find(" ",i+3);
     left=sNew.substr(3,position-3);
@@ -61,34 +59,34 @@ else
 
 QueryResult AndQuery::eval (const TextQuery& text) const {
     QueryResult left_result = text.query(left_query);
-    QueryResult right_result = text.query(right_query);
-    auto ret_lines = make_shared<set<line_no>>();
-    set_intersection(left_result.begin(), left_result.end(),
-        right_result.begin(), right_result.end(), 
-        inserter(*ret_lines, ret_lines->begin()));
-   return QueryResult(rep(), ret_lines, left_result.get_file());
+       QueryResult right_result = text.query(right_query);
+           auto ret_lines = make_shared<set<line_no>>();
+                set_intersection(left_result.begin(), left_result.end(),
+                     right_result.begin(), right_result.end(), 
+                          inserter(*ret_lines, ret_lines->begin()));
+                            return QueryResult(rep(), ret_lines, left_result.get_file());
 }
 
 QueryResult OrQuery::eval(const TextQuery &text) const {
     QueryResult left_result = text.query(left_query);
-    QueryResult right_result = text.query(right_query);
-    auto ret_lines = make_shared<set<line_no>>(left_result.begin(), left_result.end());
-    ret_lines->insert(right_result.begin(), right_result.end());
-    return QueryResult(rep(), ret_lines, left_result.get_file());
+       QueryResult right_result = text.query(right_query);
+          auto ret_lines = make_shared<set<line_no>>(left_result.begin(), left_result.end());
+             ret_lines->insert(right_result.begin(), right_result.end());
+                return QueryResult(rep(), ret_lines, left_result.get_file());
 }
 
 
 QueryResult AdjacentQuery::eval (const TextQuery& text) const {
     QueryResult left_result = text.query(left_query);
-    QueryResult right_result = text.query(right_query);
-    auto ret_lines = make_shared<set<line_no>>();
+       QueryResult right_result = text.query(right_query);
+            auto ret_lines = make_shared<set<line_no>>();
 
     for(auto itL=left_result.begin(); itL!=left_result.end(); itL++) {
          for(auto itR=right_result.begin() ;itR!=right_result.end() ;itR++) {
 
         if((*itL-*itR==1)|| (*itR-*itL==1)) {
-         ret_lines->insert(*itL);
-         ret_lines->insert(*itR);
+             ret_lines->insert(*itL);
+                 ret_lines->insert(*itR);
        
         }
      }
@@ -98,9 +96,7 @@ QueryResult AdjacentQuery::eval (const TextQuery& text) const {
 
 
 std::ostream &print(std::ostream &os, const QueryResult &qr) {
-
 int i=0, n2;
-
         os << "\"" << qr.sought << "\"" << " occurs " << 
             (qr.lines->size()+1)/2 << " times:" <<std::endl;
 
@@ -113,11 +109,8 @@ int i=0, n2;
                 } 
                 os << "\t(line " << num + 1 << ") " <<
                     *(qr.file->begin() + num) << std::endl;
-
             i++;
             n2=num;
             }
             return os;
-     }
-
-   
+        }
