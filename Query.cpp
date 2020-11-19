@@ -98,36 +98,26 @@ QueryResult AdjacentQuery::eval (const TextQuery& text) const {
 
 
 std::ostream &print(std::ostream &os, const QueryResult &qr) {
- 
-    if(qr.sought.substr(0,2)=="AD") {  
 
-        int i=0,n2;
-        auto it=qr;
+int i=0, n2;
 
         os << "\"" << qr.sought << "\"" << " occurs " << 
             (qr.lines->size()+1)/2 << " times:" <<std::endl;
 
             for (auto num : *qr.lines) {
-              
-               
-                if(i%2==0 && i!=0 && i!=qr.lines->size()/2) os << "\n" << endl;
-                if((i+1)%2==1 && n2+1==num){
-                     os << "\t(line " << num << ") " 
-                << *(qr.file->begin() + num-1) << std::endl;
-                }
-            os << "\t(line " << num + 1 << ") " 
-                << *(qr.file->begin() + num) << std::endl;
-                i++;
-              n2=num;
-        } 
-            return os;
-    }
-else 
-        os << "\"" << qr.sought << "\"" << " occurs " << 
-                qr.lines->size() << " times:" <<std::endl;
-            for (auto num : *qr.lines) {
-                os << "\t(line " << num + 1 << ") " 
-                    << *(qr.file->begin() + num) << std::endl;
+                if(qr.sought.substr(0,2)=="AD" && i!=0 && i%2==0)
+                        os<<std::endl;
+
+                if(qr.sought.substr(0,2)=="AD" && (i+1)%2==1 && n2+1==num) { 
+                    os << "\t(line " << num << ") " << *(qr.file->begin()+ num-1) << std::endl;
+                } 
+                os << "\t(line " << num + 1 << ") " <<
+                    *(qr.file->begin() + num) << std::endl;
+
+            i++;
+            n2=num;
             }
             return os;
-        }
+     }
+
+   

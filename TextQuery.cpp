@@ -50,8 +50,8 @@ void TextQuery::display_map()
     cout << endl;
 }
 
-//std::ostream &print(std::ostream &os, const QueryResult &qr)
-//{
+// std::ostream &print(std::ostream &os, const QueryResult &qr)
+// {
 //    os << "\"" << qr.sought << "\"" << " occurs " << 
 //        qr.lines->size() << " times:" <<std::endl;
 //    for (auto num : *qr.lines)
@@ -60,4 +60,4 @@ void TextQuery::display_map()
 //            << *(qr.file->begin() + num) << std::endl;
 //    }
 //    return os;
-//}
+// }
