@@ -79,13 +79,12 @@ QueryResult AdjacentQuery::eval (const TextQuery& text) const {
     QueryResult left_result = text.query(left_query);
        QueryResult right_result = text.query(right_query);
             auto ret_lines = make_shared<set<line_no>>();
-
+   
     for(auto itL=left_result.begin(); itL!=left_result.end(); itL++) {
          for(auto itR=right_result.begin() ;itR!=right_result.end() ;itR++) {
             if((*itL-*itR==1)|| (*itR-*itL==1)) {
                  ret_lines->insert(*itL);
                     ret_lines->insert(*itR);
-       
         }
      }
 }
